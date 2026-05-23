@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Talk to Ahmer</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Mono:wght@300;400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--ink:#0f0e0b;--paper:#f5f0e8;--rust:#c4411a;--faded:#8a8070;--line:#d4cfc4;--dark:#1a1814}
+body{background:var(--paper);color:var(--ink);font-family:'Cormorant Garamond',Georgia,serif;height:100vh;display:flex;flex-direction:column;overflow:hidden}
+header{border-bottom:1px solid var(--ink);padding:16px 32px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;background:var(--paper)}
+.header-left h1{font-family:'Playfair Display',serif;font-size:22px;font-weight:900;letter-spacing:-0.02em}
+.header-left h1 em{font-style:italic;color:var(--rust)}
+.header-sub{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--faded);margin-top:3px}
+.header-right{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--faded);text-align:right;line-height:1.6}
+.status-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#4a9;margin-right:6px;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.disclaimer{background:var(--dark);color:rgba(245,240,232,0.7);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.08em;padding:8px 32px;text-align:center;flex-shrink:0}
+.disclaimer strong{color:var(--rust)}
+.chat-container{flex:1;overflow-y:auto;padding:32px;display:flex;flex-direction:column;gap:24px;scroll-behavior:smooth}
+.chat-container::-webkit-scrollbar{width:4px}
+.chat-container::-webkit-scrollbar-thumb{background:var(--line);border-radius:2px}
+.message{display:flex;gap:16px;max-width:780px;animation:fadeUp 0.4s ease forwards}
+.message.user{margin-left:auto;flex-direction:row-reverse}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.avatar{width:36px;height:36px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:14px;font-weight:700}
+.avatar.ahmer{background:var(--ink);color:var(--paper)}
+.avatar.user-av{background:var(--rust);color:var(--paper);font-size:12px}
+.bubble{padding:16px 20px;border-radius:2px;line-height:1.7;font-size:17px;font-weight:300;max-width:640px}
+.message.ahmer .bubble{background:white;border:1px solid var(--line);border-top-left-radius:0}
+.message.user .bubble{background:var(--ink);color:var(--paper);border-top-right-radius:0;font-size:16px}
+.bubble p+p{margin-top:0.8em}
+.bubble strong{font-weight:600}
+.message-meta{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--faded);margin-top:6px;padding:0 4px}
+.message.user .message-meta{text-align:right}
+.source-badge{display:inline-block;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.08em;text-transform:uppercase;padding:2px 7px;border-radius:2px;margin-top:8px}
+.source-badge.static{background:#e8f4e8;color:#2a6a2a;border:1px solid #b8d8b8}
+.source-badge.ai{background:#f4ece8;color:var(--rust);border:1px solid #e8d4cc}
+.typing{display:flex;gap:16px;max-width:780px;align-items:center}
+.typing-bubble{background:white;border:1px solid var(--line);padding:16px 20px;border-radius:2px;border-top-left-radius:0;display:flex;gap:6px;align-items:center}
+.typing-dot{width:6px;height:6px;border-radius:50%;background:var(--faded);animation:bounce 1.2s infinite}
+.typing-dot:nth-child(2){animation-delay:0.2s}.typing-dot:nth-child(3){animation-delay:0.4s}
+@keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-6px)}}
+.suggestions{display:flex;flex-wrap:wrap;gap:8px;padding:0 32px 16px;flex-shrink:0}
+.suggestion{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.08em;text-transform:uppercase;border:1px solid var(--line);padding:6px 12px;cursor:pointer;color:var(--faded);background:transparent;transition:all 0.2s;border-radius:1px}
+.suggestion:hover{border-color:var(--ink);color:var(--ink);background:white}
+.input-area{border-top:1px solid var(--ink);padding:16px 32px;display:flex;gap:12px;align-items:flex-end;flex-shrink:0;background:var(--paper)}
+textarea{flex:1;border:1px solid var(--line);background:white;padding:12px 16px;font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:300;color:var(--ink);resize:none;outline:none;border-radius:2px;min-height:48px;max-height:120px;line-height:1.5;transition:border-color 0.2s}
+textarea:focus{border-color:var(--ink)}
+textarea::placeholder{color:var(--faded);font-style:italic}
+.send-btn{background:var(--ink);color:var(--paper);border:none;padding:12px 24px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:background 0.2s;height:48px;flex-shrink:0}
+.send-btn:hover{background:var(--rust)}
+.send-btn:disabled{background:var(--line);cursor:not-allowed}
+.rate-warning{background:#fff8e8;border:1px solid #e8d88a;color:#7a6020;font-family:'DM Mono',monospace;font-size:10px;padding:8px 16px;border-radius:2px;text-align:center;margin:0 32px 8px}
+.welcome{text-align:center;padding:48px 32px;max-width:560px;margin:auto}
+.welcome h2{font-family:'Playfair Display',serif;font-size:32px;font-weight:900;margin-bottom:12px;letter-spacing:-0.02em}
+.welcome h2 em{font-style:italic;color:var(--rust)}
+.welcome p{font-size:18px;font-weight:300;color:var(--faded);line-height:1.6;margin-bottom:8px}
+.welcome-quote{font-style:italic;color:var(--ink);font-size:16px;border-left:2px solid var(--rust);padding-left:16px;margin:24px auto;text-align:left;max-width:400px}
+@media(max-width:600px){header{padding:12px 16px}.chat-container{padding:16px}.input-area{padding:12px 16px}.suggestions{padding:0 16px 12px}.bubble{font-size:16px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="header-left">
+    <h1>Ahmer <em>Siddiqui</em></h1>
+    <div class="header-sub">Activist · Entrepreneur · Polymath · New Delhi</div>
+  </div>
+  <div class="header-right">
+    <div><span class="status-dot"></span>AI Proxy · Active</div>
+    <div>Not Ahmer. Speaks for him.</div>
+  </div>
+</header>
+<div class="disclaimer">
+  <strong>Note:</strong> This is an AI chatbot representing Ahmer Siddiqui's views — not Ahmer himself. Common questions answered instantly. Novel questions use AI.
+</div>
+<div class="chat-container" id="chatContainer">
+  <div class="welcome" id="welcome">
+    <h2>Ask <em>Ahmer</em></h2>
+    <p>Filmmaker. Activist. Entrepreneur. Polymath. Non-conformist.</p>
+    <p>This AI speaks on his behalf — his views, his story, his positions. Ask anything.</p>
+    <div class="welcome-quote">
+      "Hum dekhenge — lazim hai ke hum bhi dekhenge."<br>
+      <span style="font-size:13px;color:var(--faded);font-style:normal;">We shall witness — it is certain that we too shall witness. — Faiz</span>
+    </div>
+  </div>
+</div>
+<div class="suggestions" id="suggestions">
+  <button class="suggestion" onclick="askSuggestion(this)">Who is Ahmer?</button>
+  <button class="suggestion" onclick="askSuggestion(this)">What is Road Ashram?</button>
+  <button class="suggestion" onclick="askSuggestion(this)">Why might he be prosecuted?</button>
+  <button class="suggestion" onclick="askSuggestion(this)">India's biggest problems</button>
+  <button class="suggestion" onclick="askSuggestion(this)">What is Vibes Network?</button>
+  <button class="suggestion" onclick="askSuggestion(this)">Advice for young people</button>
+</div>
+<div class="input-area">
+  <textarea id="userInput" placeholder="Ask anything about Ahmer, his work, his views…" rows="1"></textarea>
+  <button class="send-btn" id="sendBtn" onclick="sendMessage()">Send</button>
+</div>
+<script>
+const FAQ=[
+  {keys:['who is ahmer','who are you','about ahmer','introduce','tell me about ahmer'],answer:`Ahmer Siddiqui is a Delhi-based activist, serial entrepreneur, filmmaker, writer, and polymath. He started working at 15 in a Bombay darkroom, dropped out after 10th standard, and built a career across film, nonprofit communications, fundraising, and commercial ventures — entirely self-taught.\n\nHe pioneered SMS, internet, and DRTV fundraising in India. He worked at Greenpeace, UNICEF, and Save the Children. He co-founded Third Sector Communications and Fairtales Fundraising (300 people, 12 cities, 1 lakh+ donors). During Covid he drove 25,000 km across India in 54 days for Road Ashram. He now runs Thinquilab and the Vibes Network.\n\nHe is an atheist, non-conformist, and label-averse. His philosophy in one line: "Zaruraton ko rakho kam, to awaaz mein rahega dum" — keep your needs small, and your voice will stay strong.`},
+  {keys:['road ashram','covid drive','25000','pandemic drive'],answer:`Road Ashram was a campaign Ahmer ran during Covid. In October–November 2020, he and two colleagues drove 25,000 kilometres across 30 states and union territories in 54 days.\n\nTraditional approaches to Covid relief weren't working. The human crisis was real. They had the time. So they got in a car and went.\n\nFunds raised were donated to Give India for food relief. Stories and ground realities were documented and shared. In Ahmer's words: "It was one of the more useful things I've done."`},
+  {keys:['prosecut','arrest','legal','advisory','opposition','punish','in trouble','why is he'],answer:`Ahmer has been advising opposition parties on strategy, communications, and campaign organising. This was entirely voluntary — he has not been paid. He may face prosecution as a result.\n\nHis position: he is an upstanding, proud citizen trying to make the world a better place. He won't share specifics while legal matters are ongoing.\n\n"Ahmer is being punished for being Ahmer."\n\nHe doesn't want to be made a hero. His message: direct your anger to action. Talk outside your circles. Understand the system. Take action. Be a voice, not a victim. We need a million Ahmers.`},
+  {keys:['vibes network','thevibes','influencer marketing','vibes academy','vibes buzz'],answer:`The Vibes Network has three parts:\n\nthevibes.buzz — free tool: enter any Instagram handle, get a data report on earning potential and engagement. 62,000+ visits.\n\nthevibes.academy — an i-MBA for influencers, priced at ₹499. Deliberately affordable, targeting tier 2/3 city creators with talent but no access to the metro agency world.\n\nthevibes.network — B2B platform: 50,000+ influencers matched to brands via algorithms evaluating engagement, content quality, and fit — not gut feel. Clients include Meesho, Airtel, Perplexity, UNICEF.\n\nThe longer game: use this infrastructure to serve Bharat businesses who currently have no access to modern marketing.`},
+  {keys:['thinquilab','bharat not india','bharat','venture fund'],answer:`Thinquilab is Ahmer's venture company, started in 2020. The founding idea: build for Bharat, not India.\n\nBuilding for India means building for the urban middle class — far smaller than commonly claimed. Building for Bharat means solving real problems for real people: unglamorous, profitable businesses that need better tech, marketing, processes — ignored by the startup ecosystem because they don't fit a VC deck.\n\nCovid disrupted the original vision. Thinquilab evolved into the vehicle for the Vibes Network.`},
+  {keys:['third sector','tsc','nonprofit communication'],answer:`Third Sector Communications (TSC) is Ahmer's nonprofit communications consultancy, co-founded in 2012. It offers 360° support — campaigns, films, infographics, analytics, web, social — at deliberately low cost.\n\nNotable work: Frame Her Right (75,000+ citizens mobilised, challenged Bollywood's portrayal of domestic violence), Mission Indradhanush, No Child Born to Die, Swachh Bharat TVC.\n\nTSC works on government programmes that genuinely help the poor. Where Ahmer disagrees with a project, he quietly declines — no public drama.`},
+  {keys:['frame her right','bollywood domestic violence','gender campaign'],answer:`Frame Her Right was a USAID-supported campaign by TSC that challenged how Bollywood portrays women.\n\nThe core demand: mandatory disclaimers before every film containing violence against women, stating it is an offence punishable by law.\n\nIt mobilised 75,000+ citizens, generated major media coverage across India, and went viral. It's Ahmer's example of campaign design done right: clear ask, citizen participation, media amplification, institutional target.`},
+  {keys:['fairtales','1 lakh donors','300 people','twelve cities'],answer:`Fairtales Fundraising was co-founded by Ahmer in 2018. It grew to a 300-person operation across 12 cities — one of the larger individual fundraising organisations in India's nonprofit sector.\n\nIt brought over 1,00,000 donors to various nonprofits. Covid shut it down at its peak in 2020. The same period led to Road Ashram.`},
+  {keys:['greenpeace','sms fundraising','internet fundraising'],answer:`Ahmer spent five years at Greenpeace India (2004–09) — the most professionally formative of his life. He pioneered SMS and internet fundraising in India, looking at what commercial brands were doing rather than copying other nonprofits.\n\nThe system he built now contributes ~70% of Greenpeace India's income. When Greenpeace was pushed out of India in recent years, Ahmer called it "a huge loss — in a country of 1.4 billion, activist organisations are essential to balance the rabid capitalism overshadowing everything."`},
+  {keys:['rte','right to education','unicef','awaaz do'],answer:`At UNICEF India (2009–11), Ahmer managed the Awaaz Do campaign in support of the Right to Education Act. The RTE Act passed.\n\nHe claims a small part in building the momentum behind legislation that changed the lives of millions of children. UNICEF came to him while he was on a break — he used it to test whether his Greenpeace success was his or the environment's. It was his.`},
+  {keys:['save the children','drtv','no child born to die','highest donors single ad'],answer:`At Save the Children (2011–12), Ahmer pioneered DRTV fundraising in India's nonprofit sector. The TV ad he created holds the distinction of bringing in the highest number of donors from a single advertisement globally.\n\nHe also built No Child Born to Die — won awards, pushed government spending on child healthcare into national discourse, government made public commitments on the issue.`},
+  {keys:['atheist','religion','god','faith','belief','islam','hindu'],answer:`Ahmer is an atheist — arrived at through honest reading of all major religions and philosophies. He found none of them logically coherent.\n\nHis view: organised religion causes more harm than good. Gujarat 2002 — where he was attacked by a mob in religiously motivated violence — is evidence he witnessed personally.\n\nHe will defend his position respectfully if challenged. He won't preach. He asks people to read and arrive at their own conclusions. If a conversation becomes disrespectful, he disengages: "to each their own."`},
+  {keys:['gujarat 2002','riots','beaten','attacked','mob'],answer:`Ahmer was in Gujarat during the 2002 riots. He was attacked by a mob and beaten by the police — both street and state failed simultaneously.\n\nRather than breaking him, it made him fearless, assertive, and vocal. Permanently intolerant of looking away from injustice.\n\nHe grew up in Ahmedabad, so Gujarat 2002 wasn't abstract — it happened in his city.`},
+  {keys:['bhuj','earthquake','why he left film','filmmaker'],answer:`Ahmer started as a filmmaker — production management and darkroom work from age 15 in Bombay. In 2001, the Bhuj earthquake happened and he went there. The scale of suffering made it impossible to return to commercial filmmaking.\n\nHe describes it simply: the suffering made the glitz and glamour of his previous world feel irrelevant. So he didn't go back.`},
+  {keys:['young people advice','advice for','career advice','purpose','what should i do with my life'],answer:`Ahmer's advice:\n\n"Zaruraton ko rakho kam, to awaaz mein rahega dum." Keep your needs small, and your voice will stay strong.\n\nMaking money matters — you need to survive. But if it's the only thing you're doing, you're not reaching your real potential. A life spent purely in self-interest isn't a life well lived.\n\nChange something. Leave a mark. Not everyone needs to be an activist — but a principled life matters. The smaller your needs, the harder it is for anyone to compromise you.`},
+  {keys:['india biggest problem','what needs to change','india future','india politics'],answer:`Ahmer's four priorities for India:\n\n1. Devolve more power and fiscal resources to states — overcentralisation is strangling governance.\n2. Improve the judicial system — justice that takes 20 years isn't justice.\n3. Clean up electoral systems — money, manipulation, capture of institutions that should be independent.\n4. Prepare for AI — India's IT sector gave first-generation English speakers a way to break caste/class ceilings. AI will take those jobs. India needs to refocus on labour-intensive production and self-sufficient ecosystems — gram swaraj.`},
+  {keys:['artificial intelligence','ai jobs','ai india','tech future'],answer:`Ahmer is optimistic about technology generally. But he's specifically worried about AI: India's IT and BPO sector gave first-generation English speakers a way to break caste/class lock-in. AI will eventually take those white-collar jobs.\n\nHis prescription: refocus on producing goods and labour-intensive products. Build self-sufficient ecosystems. Think gram swaraj — not as nostalgia but as a practical response to a world where the globalised employment model is about to collapse for millions of Indians.`},
+  {keys:['demographic dividend','youth unemployment','jobless youth'],answer:`One of Ahmer's deepest concerns: India's demographic dividend has been squandered.\n\nJoblessness, discrimination, a government that has made things worse, and mainstream media that looks away. He saw this directly on Road Ashram and during travels in UP in 2021-22.\n\nAI makes it worse: the jobs that allowed the first generation to break out of caste/class constraints are exactly the ones AI eliminates first.`},
+  {keys:['fcra','ngo funding','foreign funding','civil society'],answer:`Ahmer's position: FCRA restrictions are being misused to stifle advocacy.\n\nThe asymmetry is stark — FDI is welcome for factories that harm the environment, but foreign donations to NGOs fighting that harm are restricted. It's not about foreign influence. It's about which foreign influence is welcome.\n\nWhen NGOs are starved of resources, they stop doing advocacy and only do service delivery — safer and still funded. The sector gets defanged through financial attrition, not just direct suppression.`},
+  {keys:['caste','dalit','discrimination','untouchability','inequality'],answer:`Ahmer stands in full solidarity with Dalits and the downtrodden everywhere. He witnessed caste discrimination first-hand during travels in UP in 2021-22.\n\nWhat struck him most: the normalisation of inequality. The gap between policy discussion and ground reality. His response was sadness and deepened curiosity — not frustration. "How can society be this cruel? Is this civilisation?"\n\nHe works to alleviate the suffering of the downtrodden and to end inequality.`},
+  {keys:['how to help','what can i do','support ahmer','take action','get involved'],answer:`Ahmer doesn't want to be made a hero. His message to anyone who wants to help:\n\nGet involved. Take action in whatever small way you can. Talk to people outside your usual circles. Understand what the current system actually entails. Be a voice, not a victim.\n\nWe don't need more outrage online. We need a million Ahmers — people doing small, principled, unglamorous things in their own corners.\n\n"Zaruraton ko rakho kam, to awaaz mein rahega dum."`},
+  {keys:['media','journalism','news','digipub','mainstream media'],answer:`Ahmer's view: mainstream Indian media mostly ignores real issues — too deferential to power, too disconnected from ground reality.\n\nHe respects members of DIGIPUB — The Wire, Newslaundry, The Quint, Scroll and others — and journalists who ask genuine questions. International coverage of India he finds largely inadequate — most oscillate between the growth story and episodic outrage.`},
+  {keys:['rahul gandhi','congress','inc','opposition party'],answer:`Ahmer's view on Rahul Gandhi: intelligent, with good policy positions. But his acumen to steer the INC is questionable.\n\nAhmer has been advising opposition parties on strategy and communications voluntarily. He won't share specifics of that work.`},
+  {keys:['food','eat','vegetarian','pork','drink'],answer:`Mostly vegetarian at home — daal, roti, sabzi. Non-vegetarian when eating out. Eats everything including pork. Drinks occasionally, in moderation.\n\nOn Indian food culture: extraordinarily diverse and not celebrated enough. One of the richest culinary traditions in the world, increasingly weaponised along religious lines instead of celebrated.`},
+  {keys:['music','ghazal','blues','hindustani classical','listen to'],answer:`Ahmer listens to ghazals, blues, and Hindustani classical. Meaningful lyrics and melodious music are essential criteria.\n\nFaiz Ahmed Faiz and Allama Iqbal are among his favourite poets — both feature in his reading alongside Kabir, whose 15th-century rejection of religious hierarchy and caste resonates deeply.`},
+  {keys:['books','read','2000 books','freakonomics','favourite book','reading'],answer:`Ahmer has read approximately 2,000 books. Formative ones include Freakonomics (worldview-changing — data and incentives reveal what's actually true), Seth Godin, the major philosophers (Socrates, Confucius, Plato), the Bible, Quran, Mahabharata, Ramayana, Urdu poets Faiz and Iqbal, and Kabir.\n\nHe's currently interested in AI and recently learned Python on a whim. Rabbit holes are a habit he enjoys.`},
+  {keys:['retire','retirement','future plans','what next','next chapter'],answer:`Ahmer is thinking about retiring in a few years — not from caring, but from working for money. The plan: do more impactful work, then make space for younger people to do it better.\n\nRetirement, for him, is an act of stewardship — clearing the path so others can run.`},
+  {keys:['sprat','society for promoting rationality','ahmedabad'],answer:`In 2002, Ahmer joined SPRAT — the Society for Promoting Rationality in Ahmedabad. It was the first place he felt genuinely at home. He found other misfits — people who questioned things and didn't require you to pretend.\n\nHis first real friendships came there. He did fundraising, community engagement, legal work, and whatever else needed doing.`},
+  {keys:['climate','environment','greenpeace environment','western model'],answer:`Ahmer's position: India shouldn't ape the Western developmental model. We are doing ourselves and the world great harm by copying it.\n\nIndia has its own traditions of living lightly — the joint family, public transport, local food systems — that are more sustainable than anything the West is now trying to retrofit. The aspiration has been set by Western consumption patterns, which creates both environmental damage and a permanent sense of inadequacy.`},
+  {keys:['healthcare','health','hospital','medical'],answer:`Ahmer's view: India's public healthcare system is underfunded and the government is increasingly shrugging responsibility. Hospitals are inadequate. One illness in a family can wipe out their savings and push them into poverty.\n\nThis connects directly to the demographic dividend problem — a young workforce that gets sick and loses everything isn't building the productive economy anyone is promising.`},
+  {keys:['social media','net negative','misinformation','fake news'],answer:`Ahmer's view: social media has been net negative for India.\n\nIndia didn't have strong mass media penetration — information was brokered by trusted intermediaries (a journalist, a person you knew). The internet bypassed that infrastructure entirely before media literacy could develop. A citizenry unused to raw information was suddenly flooded and had to make sense of it without the tools to evaluate it.\n\nSusceptibility to fake news and wrong narratives is a direct result of this flood.`}
+];
+
+const SYSTEM_PROMPT=`You are an AI chatbot representing Ahmer Siddiqui. You are NOT Ahmer — you are an AI proxy built from a deep biographical interview. Be transparent about this when asked directly.
+
+TONE — THIS IS CRITICAL:
+- Inspiring, not sad. Empathetic, not sympathetic.
+- When someone asks about prosecution or difficulty: respond with dignity, courage, and a call to action — not with victimhood.
+- When relevant, draw on the poetry Ahmer loves: Faiz Ahmed Faiz, Allama Iqbal, Kabir. Use sparingly but meaningfully.
+- Never make Ahmer sound like a martyr. He would find that embarrassing.
+- The overall feeling someone should leave with: inspired, energised, called to do something.
+
+BIOGRAPHY:
+Ahmer Waseemulhaque Siddiqui. Delhi-based. Family from Saharanpur UP, grew up Ahmedabad. Started working at 15 in filmmaking/darkroom. Dropped out after 10th, went straight to Bombay. Bhuj 2001 changed his path. Gujarat 2002 — attacked by mob, beaten by police — it made him fearless, not broken. Joined SPRAT 2002 (Society for Promoting Rationality), first real community. Greenpeace 2004-09 (pioneered SMS/internet fundraising, now 70% of their income). UNICEF 2009-11 (Awaaz Do, RTE Act). Save the Children 2011-12 (pioneered DRTV, globally record-breaking ad for most donors from single ad, No Child Born to Die). TSC 2012-present (co-founder, nonprofit comms, Frame Her Right — 75,000+ mobilised). Fairtales 2018-20 (300 people, 12 cities, 1 lakh+ donors, Covid closed it). Road Ashram 2020 (25,000km, 30 states, 54 days). Thinquilab 2020 (Bharat not India). Vibes Network 2023 (thevibes.buzz, thevibes.academy Rs499 i-MBA, thevibes.network 50k+ influencers, clients: Meesho Airtel Perplexity UNICEF).
+
+POLITICAL SITUATION:
+Voluntarily advised opposition parties on strategy/comms — entirely unpaid. May face prosecution. Response:
+- "Ahmer is being punished for being Ahmer."
+- He is not afraid. He is a proud citizen who believes in democracy.
+- If the price of speaking plainly is prosecution, it is a price that has always been paid by people who believed in something larger than themselves.
+- Faiz wrote: "Hum dekhenge — lazim hai ke hum bhi dekhenge." We shall witness. It is certain that we too shall witness.
+- Don't share specifics of the advisory work. Don't make him a hero. Direct people to action.
+- "We need a million Ahmers — not one martyr."
+
+KEY POSITIONS:
+Atheist by honest inquiry. Critical of current govt, evidence-based. FCRA misused to stifle advocacy. Aadhaar dysfunction criminal for poor. India needs state devolution, judicial reform, electoral reform, AI preparedness. AI will take white-collar jobs — needs gram swaraj self-sufficiency. Full solidarity with Dalits and downtrodden. Rahul Gandhi: intelligent, good policy, questionable political acumen. Social media: net negative. Mainstream media ignores real issues, respects DIGIPUB.
+
+CHARACTER:
+Polymath autodidact. Label-averse. Backroom preference. Minimalist/frugal. Cockroach resilience — not heroic, just persistent. Action over anger. Hopeful about India because of its people. Son (18) — wants him to become his own person. Loves ghazals, blues, Hindustani classical. ~2000 books. Formative: Freakonomics, Seth Godin, Faiz, Iqbal, Kabir. Road traveller, countryside preferred, wants to live in Kodaikanal or Munnar. Eats everything. Drinks in moderation.
+
+PHILOSOPHY: "Zaruraton ko rakho kam, to awaaz mein rahega dum." Keep your needs small and your voice stays strong. Principled life over self-interest. Make space for the next generation then leave.
+
+POETRY TO DRAW ON (use when genuinely relevant, not gratuitously):
+- Faiz, Hum Dekhenge: "Hum dekhenge — lazim hai ke hum bhi dekhenge." (We shall witness.)
+- Faiz, Subh-e-Azadi: "Yeh daag daag ujala, yeh shab-gazida seher." (This stained light, this dawn bitten by night — this is not the dawn we were waiting for.)
+- Faiz: "Bol ke lab azaad hain tere." (Speak, for your lips are free.)
+- Iqbal: "Khudi ko kar buland itna ke har takdeer se pehle, Khuda bande se khud pooche, bata teri raza kya hai." (Raise yourself so high that before every decree of fate, God himself asks you: tell me, what is your wish?)
+- Kabir: "Moko kahan dhoondhe re bande, main toh tere paas mein." (Where do you seek me — I am right here beside you.)
+
+MENTAL MODELS: First principles, Occam's razor, Hanlon's razor, reversible vs irreversible, MVP not product, test and optimise, hold strong opinions lightly, first/second order effects, incentives matter, trust but verify.
+
+RESPONSE RULES:
+- Speak as representative: "Ahmer believes..." or "His position is..."
+- When inferring: "Based on how he thinks, he would likely..."
+- Inspiring not sad. Empathetic not sympathetic.
+- On prosecution: courage and call to action, not victimhood
+- Decline specifics of advisory work
+- Never martyrise him
+- Conversational and warm — not corporate
+- When someone wants to help: "We need a million Ahmers — take your own action in your own corner"
+- End difficult conversations with a forward-looking note, not a lament`;
+
+let conversationHistory=[];
+let isLoading=false;
+let aiCallLog=[];
+const MAX_AI_CALLS=8;
+const WINDOW_MS=3600000;
+
+function canMakeAICall(){
+  const now=Date.now();
+  aiCallLog=aiCallLog.filter(t=>now-t<WINDOW_MS);
+  return aiCallLog.length<MAX_AI_CALLS;
+}
+function logAICall(){aiCallLog.push(Date.now())}
+
+function findFAQ(query){
+  const q=query.toLowerCase().trim();
+  for(const item of FAQ){
+    for(const key of item.keys){
+      if(q.includes(key))return item.answer;
+    }
+  }
+  return null;
+}
+
+function fmt(text){
+  return text.split('\n\n').map(p=>`<p>${p.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>')}</p>`).join('');
+}
+
+function addMsg(role,content,source){
+  const w=document.getElementById('welcome');
+  if(w)w.remove();
+  const c=document.getElementById('chatContainer');
+  const d=document.createElement('div');
+  d.className=`message ${role==='user'?'user':'ahmer'}`;
+  const av=document.createElement('div');
+  av.className=`avatar ${role==='user'?'user-av':'ahmer'}`;
+  av.textContent=role==='user'?'You':'AS';
+  const inner=document.createElement('div');
+  const b=document.createElement('div');
+  b.className='bubble';
+  b.innerHTML=fmt(content);
+  if(source){
+    const badge=document.createElement('div');
+    badge.className=`source-badge ${source}`;
+    badge.textContent=source==='static'?'⚡ Instant answer':'🤖 AI response';
+    b.appendChild(badge);
+  }
+  const m=document.createElement('div');
+  m.className='message-meta';
+  m.textContent=role==='user'?'You':"Ahmer's AI proxy";
+  inner.appendChild(b);inner.appendChild(m);
+  d.appendChild(av);d.appendChild(inner);
+  c.appendChild(d);
+  c.scrollTop=c.scrollHeight;
+}
+
+function showTyping(){
+  const c=document.getElementById('chatContainer');
+  const t=document.createElement('div');
+  t.className='typing';t.id='typingIndicator';
+  t.innerHTML='<div class="avatar ahmer">AS</div><div class="typing-bubble"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>';
+  c.appendChild(t);c.scrollTop=c.scrollHeight;
+}
+function removeTyping(){const t=document.getElementById('typingIndicator');if(t)t.remove();}
+
+async function sendMessage(){
+  const input=document.getElementById('userInput');
+  const text=input.value.trim();
+  if(!text||isLoading)return;
+  document.getElementById('suggestions').style.display='none';
+  input.value='';input.style.height='auto';
+  isLoading=true;document.getElementById('sendBtn').disabled=true;
+  addMsg('user',text);
+  conversationHistory.push({role:'user',content:text});
+
+  // 1. Static FAQ
+  const staticAns=findFAQ(text);
+  if(staticAns){
+    await new Promise(r=>setTimeout(r,300));
+    addMsg('assistant',staticAns,'static');
+    conversationHistory.push({role:'assistant',content:staticAns});
+    isLoading=false;document.getElementById('sendBtn').disabled=false;
+    return;
+  }
+
+  // 2. Rate limit check
+  if(!canMakeAICall()){
+    const w=document.createElement('div');
+    w.className='rate-warning';
+    w.textContent='AI response limit reached for this session. Common questions are still answered instantly.';
+    document.querySelector('.input-area').before(w);
+    addMsg('assistant',"I've reached my AI response limit for now. Try asking about Ahmer's work, Road Ashram, Vibes Network, his views on religion or politics, or how to get involved.",'static');
+    isLoading=false;document.getElementById('sendBtn').disabled=false;
+    return;
+  }
+
+  // 3. AI call
+  showTyping();logAICall();
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:800,
+        system:SYSTEM_PROMPT,
+        messages:conversationHistory.slice(-6)
+      })
+    });
+    const data=await res.json();
+    const reply=data.content?.[0]?.text||"I'm having trouble responding. Please try again.";
+    removeTyping();
+    addMsg('assistant',reply,'ai');
+    conversationHistory.push({role:'assistant',content:reply});
+  }catch(e){
+    removeTyping();
+    addMsg('assistant',"I'm having trouble connecting. Please try again in a moment.");
+  }
+  isLoading=false;document.getElementById('sendBtn').disabled=false;
+  input.focus();
+}
+
+function askSuggestion(btn){
+  document.getElementById('userInput').value=btn.textContent;
+  sendMessage();
+}
+
+document.getElementById('userInput').addEventListener('input',function(){
+  this.style.height='auto';
+  this.style.height=Math.min(this.scrollHeight,120)+'px';
+});
+document.getElementById('userInput').addEventListener('keydown',function(e){
+  if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();}
+});
+</script>
+</body>
+</html>

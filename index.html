@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ahmer Siddiqui</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Mono:wght@300;400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--ink:#0f0e0b;--paper:#f5f0e8;--rust:#c4411a;--faded:#8a8070;--line:#d4cfc4;--warm:#2a1f1a}
+html{scroll-behavior:smooth}
+body{background:var(--paper);color:var(--ink);font-family:'Cormorant Garamond',Georgia,serif;font-size:18px;line-height:1.7;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:100;opacity:0.5}
+.topbar{border-bottom:1px solid var(--ink);padding:14px 48px;display:flex;justify-content:space-between;align-items:center;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;opacity:0;animation:fadeUp 0.6s ease 0.1s forwards}
+.topbar-left,.topbar-right{color:var(--faded)}
+.hero{padding:80px 48px 60px;border-bottom:1px solid var(--ink);opacity:0;animation:fadeUp 0.7s ease 0.2s forwards}
+.hero-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--rust);margin-bottom:24px}
+.hero-name{font-family:'Playfair Display',serif;font-size:clamp(56px,10vw,120px);font-weight:900;line-height:0.92;letter-spacing:-0.02em}
+.hero-name em{font-style:italic;color:var(--rust)}
+.hero-descriptor{margin-top:40px;display:flex;flex-wrap:wrap}
+.tag{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;border:1px solid var(--ink);padding:6px 14px;margin-right:-1px;margin-bottom:-1px;cursor:default;transition:background 0.2s,color 0.2s}
+.tag:hover{background:var(--ink);color:var(--paper)}
+.tag.rust{border-color:var(--rust);color:var(--rust)}
+.tag.rust:hover{background:var(--rust);color:var(--paper)}
+.hero-pull{margin-top:60px;max-width:640px;font-size:clamp(20px,2.5vw,26px);font-weight:300;font-style:italic;line-height:1.45;color:var(--ink)}
+.hero-pull-attr{margin-top:10px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--faded)}
+.section{display:grid;grid-template-columns:220px 1fr;border-bottom:1px solid var(--line);opacity:0;transform:translateY(20px);transition:opacity 0.7s ease,transform 0.7s ease}
+.section.visible{opacity:1;transform:translateY(0)}
+.section-label{padding:48px;border-right:1px solid var(--line);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--faded);position:sticky;top:0;height:fit-content}
+.section-body{padding:48px 48px 48px 60px}
+.intro-text{font-size:clamp(17px,1.8vw,21px);line-height:1.8;font-weight:300;max-width:720px}
+.intro-text p+p{margin-top:1.5em}
+.intro-text strong{font-weight:600}
+.poetry-block{border-left:3px solid var(--rust);padding:20px 24px;margin:2em 0;background:rgba(196,65,26,0.04)}
+.poetry-block .urdu{font-family:'Playfair Display',serif;font-size:clamp(18px,2vw,22px);font-style:italic;line-height:1.6;color:var(--ink);margin-bottom:8px}
+.poetry-block .translation{font-size:14px;color:var(--faded);font-weight:300;margin-bottom:6px}
+.poetry-block .attribution{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--rust)}
+.timeline{list-style:none}
+.timeline li{display:grid;grid-template-columns:120px 1fr;gap:24px;padding:20px 0;border-bottom:1px solid var(--line)}
+.timeline li:last-child{border-bottom:none}
+.tl-year{font-family:'DM Mono',monospace;font-size:12px;color:var(--faded);padding-top:3px}
+.tl-content h3{font-family:'Playfair Display',serif;font-size:19px;font-weight:700;margin-bottom:4px}
+.tl-content p{font-size:16px;color:#4a4540;font-weight:300;margin-top:4px}
+.tl-content .org{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--rust);margin-bottom:4px}
+.feature-block{background:var(--ink);color:var(--paper);padding:48px 60px;margin:0 -48px 0 -60px;position:relative;overflow:hidden}
+.feature-block::before{content:'"';font-family:'Playfair Display',serif;font-size:300px;line-height:1;color:rgba(255,255,255,0.04);position:absolute;top:-40px;left:20px;pointer-events:none}
+.feature-block h2{font-family:'Playfair Display',serif;font-size:clamp(28px,4vw,48px);font-weight:900;margin-bottom:8px}
+.feature-block .subtitle{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--rust);margin-bottom:28px}
+.feature-block p{font-size:clamp(16px,1.6vw,19px);font-weight:300;line-height:1.75;max-width:640px;opacity:0.9}
+.feature-block p+p{margin-top:1.2em}
+.feature-stats{display:flex;gap:48px;margin-top:40px;flex-wrap:wrap}
+.stat-num{font-family:'Playfair Display',serif;font-size:48px;font-weight:900;color:var(--rust);line-height:1}
+.stat-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:rgba(245,240,232,0.5);margin-top:4px}
+.inspire-block{background:var(--warm);color:var(--paper);padding:48px 60px;margin:0 -48px 0 -60px;border-left:4px solid var(--rust);position:relative}
+.inspire-block .ib-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--rust);margin-bottom:20px}
+.inspire-block p{font-size:clamp(16px,1.6vw,19px);font-weight:300;line-height:1.8;max-width:680px;opacity:0.9}
+.inspire-block p+p{margin-top:1.2em}
+.inspire-block .call{font-family:'Playfair Display',serif;font-size:clamp(20px,2.5vw,28px);font-style:italic;margin-top:1.5em;color:var(--paper);opacity:1}
+.beliefs{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.belief{padding:28px 32px 28px 0;border-bottom:1px solid var(--line);border-right:1px solid var(--line)}
+.belief:nth-child(even){padding-left:32px;padding-right:0;border-right:none}
+.belief-num{font-family:'DM Mono',monospace;font-size:10px;color:var(--rust);letter-spacing:0.1em;margin-bottom:8px}
+.belief h3{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;margin-bottom:6px}
+.belief p{font-size:15px;color:#5a5450;font-weight:300}
+.ventures{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.venture-card{border:1px solid var(--line);padding:24px;transition:border-color 0.2s}
+.venture-card:hover{border-color:var(--ink)}
+.venture-card .vc-name{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--rust);margin-bottom:8px}
+.venture-card h3{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;margin-bottom:8px}
+.venture-card p{font-size:15px;font-weight:300;color:#5a5450;line-height:1.6}
+.venture-card a{color:var(--rust);text-decoration:none;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;margin-top:10px;display:inline-block;border-bottom:1px solid transparent;transition:border-color 0.2s}
+.venture-card a:hover{border-color:var(--rust)}
+footer{padding:48px;display:flex;justify-content:space-between;align-items:flex-end;border-top:2px solid var(--ink)}
+.footer-name{font-family:'Playfair Display',serif;font-size:28px;font-weight:900;letter-spacing:-0.02em}
+.footer-location{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--faded);margin-top:6px}
+.footer-links{display:flex;gap:32px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase}
+.footer-links a{color:var(--faded);text-decoration:none;border-bottom:1px solid transparent;transition:color 0.2s,border-color 0.2s}
+.footer-links a:hover{color:var(--ink);border-color:var(--ink)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+/* FLOATING CHATBOT */
+.chat-fab{position:fixed;bottom:32px;right:32px;z-index:999;display:flex;flex-direction:column;align-items:flex-end;gap:10px}
+.chat-tooltip{background:var(--ink);color:var(--paper);font-family:'Cormorant Garamond',serif;font-size:15px;font-style:italic;padding:12px 18px;border-radius:3px;opacity:0;transform:translateY(6px);transition:all 0.3s;pointer-events:none;max-width:240px;text-align:right;line-height:1.5;font-weight:300;box-shadow:0 4px 20px rgba(0,0,0,0.2)}
+.chat-tooltip span{display:block;font-family:'DM Mono',monospace;font-size:9px;font-style:normal;letter-spacing:0.1em;text-transform:uppercase;color:var(--rust);margin-top:4px}
+.chat-fab:hover .chat-tooltip{opacity:1;transform:translateY(0)}
+.chat-fab-btn{background:var(--rust);color:var(--paper);border:none;border-radius:50px;padding:18px 28px;font-family:'DM Mono',monospace;font-size:12px;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;gap:12px;box-shadow:0 8px 32px rgba(196,65,26,0.5);transition:all 0.3s;animation:fabPop 0.8s ease 1.5s both;position:relative;overflow:hidden}
+.chat-fab-btn::before{content:'';position:absolute;inset:0;background:rgba(255,255,255,0);transition:background 0.3s}
+.chat-fab-btn:hover{transform:translateY(-3px);box-shadow:0 16px 48px rgba(196,65,26,0.6)}
+.chat-fab-btn:hover::before{background:rgba(255,255,255,0.08)}
+.chat-fab-pulse{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.9);flex-shrink:0;position:relative}
+.chat-fab-pulse::after{content:'';position:absolute;inset:-4px;border-radius:50%;border:2px solid rgba(255,255,255,0.4);animation:ripple 1.5s infinite}
+@keyframes ripple{0%{transform:scale(0.8);opacity:1}100%{transform:scale(1.8);opacity:0}}
+.chat-fab-text{line-height:1.2}
+.chat-fab-main{display:block;font-size:12px;letter-spacing:0.12em}
+.chat-fab-sub{display:block;font-size:9px;opacity:0.7;margin-top:2px;letter-spacing:0.08em}
+@keyframes fabPop{0%{opacity:0;transform:scale(0.7) translateY(20px)}70%{transform:scale(1.05) translateY(-2px)}100%{opacity:1;transform:scale(1) translateY(0)}}
+
+@media(max-width:700px){
+  .topbar{padding:12px 24px}
+  .hero{padding:48px 24px 40px}
+  .section{grid-template-columns:1fr}
+  .section-label{padding:32px 24px 8px;border-right:none;border-bottom:1px solid var(--line);position:static}
+  .section-body{padding:24px}
+  .feature-block,.inspire-block{margin:0 -24px;padding:36px 24px}
+  footer{padding:32px 24px;flex-direction:column;gap:24px;align-items:flex-start}
+  .beliefs,.ventures{grid-template-columns:1fr}
+  .belief,.belief:nth-child(even){padding-left:0;padding-right:0;border-right:none}
+  .chat-fab{bottom:20px;right:20px}
+  .chat-fab-btn{padding:14px 20px}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <span class="topbar-left">New Delhi, India</span>
+  <span class="topbar-right">Nonprofit · Film · Activism · Entrepreneurship</span>
+</div>
+
+<section class="hero">
+  <p class="hero-label">About</p>
+  <h1 class="hero-name">Ahmer<br><em>Siddiqui</em></h1>
+  <div class="hero-descriptor">
+    <span class="tag rust">Atheist</span>
+    <span class="tag">Non-conformist</span>
+    <span class="tag">Filmmaker</span>
+    <span class="tag">Writer</span>
+    <span class="tag rust">Activist</span>
+    <span class="tag">Entrepreneur</span>
+    <span class="tag">Polymath</span>
+    <span class="tag">Autodidact</span>
+  </div>
+  <p class="hero-pull">"Hum dekhenge — lazim hai ke hum bhi dekhenge."<br><span style="font-size:0.7em;font-style:normal;color:var(--faded)">We shall witness — it is certain that we too shall witness.</span></p>
+  <p class="hero-pull-attr">— Faiz Ahmed Faiz</p>
+</section>
+
+<!-- WHO I AM -->
+<div class="section" id="s-intro">
+  <div class="section-label"><span>Who I Am</span></div>
+  <div class="section-body">
+    <div class="intro-text">
+      <p>I started working at 15 in a Bombay darkroom. No backup plan, no safety net. I dropped out after 10th standard and went straight to work — hard, unglamorous, sweaty, instructive. Everything I know about execution under pressure comes from those years.</p>
+      <p>In 2001, the Bhuj earthquake happened and I went there. The scale of suffering made it impossible to return to what I was doing before. Around the same time I started reading — every religion, every philosophy — genuinely looking for answers. I read honestly and came out an atheist. The logic wasn't there. That's still where I stand.</p>
+      <p>In 2002, Gujarat burned. I was there. I was attacked by a mob and beaten by the police. Both the street and the state failed at once. That experience didn't break me — it made me fearless. It gave me a permanent, bone-deep intolerance for looking away from things that are wrong. I have been vocal and campaign-involved ever since. That is not a recent position. It goes back two decades.</p>
+
+      <div class="poetry-block">
+        <div class="urdu">"Bol ke lab azaad hain tere,<br>bol ke zubaan ab tak teri hai."</div>
+        <div class="translation">Speak, for your lips are free — speak, for your tongue is still yours.</div>
+        <div class="attribution">— Faiz Ahmed Faiz</div>
+      </div>
+
+      <p>Since then I have worked at the intersection of causes, communications, and the stubborn belief that the world can be moved. I pioneered SMS, internet, and DRTV fundraising in India. I worked on campaigns that helped pass the Right to Education Act, pushed government spending on child healthcare into national discourse, and helped bring over a lakh donors to nonprofits across India. During a pandemic, I drove 25,000 kilometres across this country because traditional approaches weren't working and someone had to go.</p>
+      <p>I am an autodidact and a polymath. None of what I do was formally taught. All of it has been in service of something. I am label-averse — the question of whether I am an activist or a businessman is a false choice. I prefer the backroom to the spotlight. I live simply, keep my needs small, and keep going.</p>
+    </div>
+  </div>
+</div>
+
+<!-- EARLY LIFE -->
+<div class="section" id="s-early">
+  <div class="section-label"><span>Early Life</span></div>
+  <div class="section-body">
+    <div class="intro-text">
+      <p>My family is from Saharanpur in UP. I grew up in Ahmedabad. I left for Bombay the day my 10th standard exams finished — my uncles ran a darkroom and I had been learning filmmaking since I was 15. So there was no gap and no plan B. Just the work.</p>
+      <p>The first years in Bombay were hard. Darkroom work without AC. Long hours. No real friends — just colleagues. I built a reputation for solving edge-case problems that others couldn't. That reputation became the foundation for everything that came after.</p>
+      <p>Real community only came in 2002, when I joined SPRAT — the Society for Promoting Rationality in Ahmedabad. I found other misfits there. People who questioned things without needing you to pretend. It was the first place I felt genuinely at home.</p>
+
+      <div class="poetry-block">
+        <div class="urdu">"Jab zulm-o-sitam ke koh-e-garaan,<br>rooi ki tarah ud jaayenge."</div>
+        <div class="translation">When the mountains of oppression and cruelty will fly away like cotton.</div>
+        <div class="attribution">— Faiz Ahmed Faiz, Hum Dekhenge</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- THE WORK -->
+<div class="section" id="s-career">
+  <div class="section-label"><span>The Work</span></div>
+  <div class="section-body">
+    <ul class="timeline">
+      <li>
+        <div class="tl-year">2023—</div>
+        <div class="tl-content">
+          <div class="org">Vibes Network · Thinquilab</div>
+          <h3>Founder</h3>
+          <p>Data-driven influencer marketing — thevibes.buzz (free Instagram analytics, 62k+ visits), thevibes.academy (i-MBA for creators, ₹499, targeting tier 2/3 talent), thevibes.network (50,000+ influencers, algorithm-matched, not gut-feel). Clients: Meesho, Airtel, Perplexity, UNICEF. The longer game: make modern marketing accessible to Bharat businesses that currently can't afford it.</p>
+        </div>
+      </li>
+      <li>
+        <div class="tl-year">2020—</div>
+        <div class="tl-content">
+          <div class="org">Thinquilab Pvt Ltd</div>
+          <h3>Founder</h3>
+          <p>Built to serve Bharat, not India. Building for India means building for the narrow urban middle class. Building for Bharat means solving real problems for real people — unglamorous, profitable businesses the startup ecosystem ignores entirely. Covid disrupted the original vision. Thinquilab became the vehicle for the Vibes Network.</p>
+        </div>
+      </li>
+      <li>
+        <div class="tl-year">2018–20</div>
+        <div class="tl-content">
+          <div class="org">Fairtales Fundraising</div>
+          <h3>Co-founder</h3>
+          <p>Built from scratch to 300 people across 12 cities. Brought over 1,00,000 donors to nonprofits across India. Covid shut it down at its peak. The same period produced Road Ashram.</p>
+        </div>
+      </li>
+      <li>
+        <div class="tl-year">2012—</div>
+        <div class="tl-content">
+          <div class="org">Third Sector Communications</div>
+          <h3>Co-founder</h3>
+          <p>360° communications for nonprofits at deliberately low cost. Notable work: Frame Her Right (USAID-supported, 75,000+ citizens mobilised, challenged Bollywood's portrayal of domestic violence), Mission Indradhanush, Swachh Bharat TVC, No Child Born to Die. Some of India's largest nonprofits use materials built here.</p>
+        </div>
+      </li>
+      <li>
+        <div class="tl-year">2011–12</div>
+        <div class="tl-content">
+          <div class="org">Save the Children India</div>
+          <h3>Manager</h3>
+          <p>Pioneered DRTV fundraising in India's nonprofit sector. The TV advertisement created here has the distinction of bringing in the highest number of donors from a single ad globally. No Child Born to Die — pushed government spending on child healthcare into national discourse, leading to public government commitments.</p>
+        </div>
+      </li>
+      <li>
+        <div class="tl-year">2009–11</div>
+        <div class="tl-content">
+          <div class="org">UNICEF India</div>
+          <h3>Manager, Awaaz Do Campaign</h3>
+          <p>Ran Awaaz Do, the campaign behind the Right to Education Act. A small part of the momentum behind legislation that changed the lives of millions of children.</p>
+        </div>
+      </li>
+      <li>
+        <div class="tl-year">2004–09</div>
+        <div class="tl-content">
+          <div class="org">Greenpeace India</div>
+          <h3>Fundraising</h3>
+          <p>Five formative years. Pioneered SMS and internet fundraising by looking at what commercial brands were doing rather than copying other nonprofits. That system now contributes ~70% of Greenpeace India's income. Promoted into new work every year.</p>
+        </div>
+      </li>
+      <li>
+        <div class="tl-year">2002–04</div>
+        <div class="tl-content">
+          <div class="org">SPRAT · Ahmedabad</div>
+          <h3>Fundraising & Community Engagement</h3>
+          <p>Society for Promoting Rationality. First place I felt at home. Fundraising, community engagement, legal work, whatever needed doing.</p>
+        </div>
+      </li>
+      <li>
+        <div class="tl-year">1993–2001</div>
+        <div class="tl-content">
+          <div class="org">Film · Bombay</div>
+          <h3>Production Management & Darkroom</h3>
+          <p>Started at 15. Commercial advertising, documentaries. Built a reputation for solving edge-case problems. Bhuj in 2001 is where that chapter ended.</p>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- ROAD ASHRAM -->
+<div class="section" id="s-roadashram">
+  <div class="section-label"><span>Road Ashram</span></div>
+  <div class="section-body">
+    <div class="feature-block">
+      <div class="subtitle">October – November 2020</div>
+      <h2>Road Ashram</h2>
+      <p>During the pandemic, three of us drove across India — 25,000 kilometres through 30 states and union territories in 54 days. The pandemic had turned from a health crisis into a humanitarian catastrophe and traditional approaches weren't reaching people who needed help.</p>
+      <p>So we got in a car and went. Along India's borders, through the Northeast, into every corner of a country that was hurting. Funds raised went to Give India for food relief. Stories were documented and shared. The road was the ashram — it kept us honest, close to the reality, far from abstraction.</p>
+      <div class="feature-stats">
+        <div class="stat"><div class="stat-num">25K</div><div class="stat-label">Kilometres driven</div></div>
+        <div class="stat"><div class="stat-num">30</div><div class="stat-label">States & UTs covered</div></div>
+        <div class="stat"><div class="stat-num">54</div><div class="stat-label">Days on the road</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CURRENT VENTURES -->
+<div class="section" id="s-ventures">
+  <div class="section-label"><span>Current Ventures</span></div>
+  <div class="section-body">
+    <div class="ventures">
+      <div class="venture-card">
+        <div class="vc-name">Nonprofit Comms</div>
+        <h3>Third Sector Communications</h3>
+        <p>360° communications for nonprofits at low cost. 20+ organisations, campaigns that have moved policy and people.</p>
+        <a href="https://www.thirdsectorcommunications.in" target="_blank">thirdsectorcommunications.in →</a>
+      </div>
+      <div class="venture-card">
+        <div class="vc-name">Influencer Platform</div>
+        <h3>The Vibes Network</h3>
+        <p>Data and algorithm-driven influencer marketing. 50,000+ creators. Built for Bharat, not metro India.</p>
+        <a href="https://www.thevibes.network" target="_blank">thevibes.network →</a>
+      </div>
+      <div class="venture-card">
+        <div class="vc-name">Creator Education</div>
+        <h3>Vibes Academy</h3>
+        <p>i-MBA for influencers at ₹499. Reaching the tier 2/3 creator with talent but no access to the metro agency world.</p>
+        <a href="https://www.thevibes.academy" target="_blank">thevibes.academy →</a>
+      </div>
+      <div class="venture-card">
+        <div class="vc-name">Free Tool</div>
+        <h3>Vibes Buzz</h3>
+        <p>Enter your Instagram handle. Get your earning potential, engagement data, recommendations. Free, instant, no gatekeeping.</p>
+        <a href="https://www.thevibes.buzz" target="_blank">thevibes.buzz →</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- POLITICS & CIVIC WORK -->
+<div class="section" id="s-politics">
+  <div class="section-label"><span>Civic Work</span></div>
+  <div class="section-body">
+    <div class="inspire-block">
+      <div class="ib-label">On standing up</div>
+      <p>Over recent years I have been voluntarily advising opposition parties on strategy, communications, and campaign organising. This work has been entirely unpaid. I may face prosecution for it.</p>
+      <p>I am not afraid. I am a proud, upstanding citizen who believes in democracy and in the dignity of every Indian. If the price of speaking plainly is prosecution, then that is a price that has always been paid by people who believed in something larger than themselves.</p>
+
+      <div class="poetry-block" style="background:rgba(255,255,255,0.06);border-color:var(--rust);margin:1.5em 0">
+        <div class="urdu" style="color:var(--paper)">"Yeh daag daag ujala, yeh shab-gazida seher,<br>woh intezaar tha jiska, yeh woh seher toh nahin."</div>
+        <div class="translation" style="color:rgba(245,240,232,0.6)">This stained, tarnished light, this dawn bitten by the night — this is not the dawn we were waiting for.</div>
+        <div class="attribution">— Faiz Ahmed Faiz, Subh-e-Azadi</div>
+      </div>
+
+      <p>The dawn we are waiting for still has to be built. That work does not stop because someone is uncomfortable with it being done.</p>
+      <p class="call">Don't make me a hero. Become one yourself, in your own small way. We need a million Ahmers — not one martyr.</p>
+    </div>
+  </div>
+</div>
+
+<!-- WHAT I THINK -->
+<div class="section" id="s-beliefs">
+  <div class="section-label"><span>What I Think</span></div>
+  <div class="section-body">
+    <div class="beliefs">
+      <div class="belief">
+        <div class="belief-num">01</div>
+        <h3>On religion</h3>
+        <p>I read every major religion and philosophy honestly. I found none of them logically coherent. I am an atheist. Organised religion causes more harm than good. Gujarat 2002 is the evidence I witnessed personally.</p>
+      </div>
+      <div class="belief">
+        <div class="belief-num">02</div>
+        <h3>On India's young and poor</h3>
+        <p>The demographic dividend has been squandered. Joblessness, discrimination, shrinking civic space. AI will take the white-collar jobs that gave the first generation a way out. India needs to build for self-sufficiency — gram swaraj, not startup mythology.</p>
+      </div>
+      <div class="belief">
+        <div class="belief-num">03</div>
+        <h3>On action</h3>
+        <p>Being angry doesn't help. Neither does being broken. The only thing that moves anything is showing up and doing the work — slow, unglamorous, persistent. I survive like a cockroach. That is enough.</p>
+      </div>
+      <div class="belief">
+        <div class="belief-num">04</div>
+        <h3>On civil society</h3>
+        <p>FCRA restrictions are being misused to stifle advocacy. FDI is welcome for factories that harm the environment, but foreign donations to NGOs fighting that harm are restricted. That asymmetry tells you everything.</p>
+      </div>
+      <div class="belief">
+        <div class="belief-num">05</div>
+        <h3>On caste</h3>
+        <p>I travelled through UP in 2021-22 and saw caste discrimination in its daily, unremarkable form. The normalisation of inequality is more dangerous than the inequality itself. I stand in full solidarity with Dalits and the downtrodden.</p>
+      </div>
+      <div class="belief">
+        <div class="belief-num">06</div>
+        <h3>On hope</h3>
+        <p>Despite everything, I have not lost hope in the people of this country. India is largely a kind and open society — it is being degraded, not destroyed. Change is inevitable. The people will win.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ADVICE -->
+<div class="section" id="s-advice">
+  <div class="section-label"><span>If You're Starting Out</span></div>
+  <div class="section-body">
+    <div class="intro-text">
+      <div class="poetry-block">
+        <div class="urdu">"Zaruraton ko rakho kam,<br>to awaaz mein rahega dum."</div>
+        <div class="translation">Keep your needs small, and your voice will stay strong.</div>
+        <div class="attribution">— Ahmer Siddiqui</div>
+      </div>
+      <p>Making money matters — you need to survive. But if it's the only thing you're doing, you aren't reaching your real potential. A life spent purely in self-interest isn't a life well lived.</p>
+      <p>Change something. Leave a mark. Not everyone needs to be an activist — but a principled life is important. The smaller your needs, the harder it is for anyone to compromise you.</p>
+
+      <div class="poetry-block">
+        <div class="urdu">"Moko kahan dhoondhe re bande,<br>main toh tere paas mein."</div>
+        <div class="translation">Where do you seek me, O seeker — I am right here beside you.</div>
+        <div class="attribution">— Kabir</div>
+      </div>
+
+      <p>The answers are not in institutions or authority or the approval of the powerful. They are in the work you do, the people you stand beside, and the choices you make when it costs something to make them.</p>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div>
+    <div class="footer-name">Ahmer Siddiqui</div>
+    <div class="footer-location">New Delhi · India</div>
+  </div>
+  <div class="footer-links">
+    <a href="https://www.thirdsectorcommunications.in" target="_blank">TSC</a>
+    <a href="https://www.thevibes.network" target="_blank">Vibes Network</a>
+    <a href="https://sprat.in" target="_blank">SPRAT</a>
+  </div>
+</footer>
+
+<!-- FLOATING CHATBOT -->
+<div class="chat-fab" id="chatFab">
+  <div class="chat-tooltip">
+    Ask me anything — my story, my work, my views.
+    <span>Ahmer's AI proxy · Always on</span>
+  </div>
+  <button class="chat-fab-btn" onclick="openChatbot()">
+    <span class="chat-fab-pulse"></span>
+    <span class="chat-fab-text">
+      <span class="chat-fab-main">Talk to Ahmer</span>
+      <span class="chat-fab-sub">AI proxy · Open 24/7</span>
+    </span>
+  </button>
+</div>
+
+<script>
+const sections=document.querySelectorAll('.section');
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')});
+},{threshold:0.08});
+sections.forEach(s=>observer.observe(s));
+
+function openChatbot(){
+  window.open('ahmer-chatbot.html','AhmerChat','width=920,height=720,scrollbars=yes,resizable=yes');
+}
+</script>
+</body>
+</html>
