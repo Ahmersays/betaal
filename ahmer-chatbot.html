@@ -75,12 +75,44 @@ textarea::placeholder{color:var(--faded);font-style:italic}
 .welcome p{font-size:16px;font-weight:300;color:var(--faded);line-height:1.6;margin-bottom:6px}
 .welcome-quote{font-style:italic;color:var(--ink);font-size:15px;border-left:2px solid var(--rust);padding-left:14px;margin:20px auto;text-align:left;max-width:360px;line-height:1.6}
 
-@media(max-width:600px){
-  header{padding:14px 16px}
-  .chat-container{padding:16px}
-  .input-area{padding:12px 16px}
-  .suggestions{padding:0 16px 10px}
-  .disclaimer{padding:6px 16px}
+@media(max-width:768px){
+  /* Header */
+  header{padding:12px 16px;flex-direction:column;align-items:flex-start;gap:4px}
+  .header-right{display:none}
+  .header-left h1{font-size:16px}
+  .header-sub{font-size:8px}
+
+  /* Disclaimer */
+  .disclaimer{padding:5px 12px;font-size:8px}
+
+  /* Chat */
+  .chat-container{padding:12px 14px;gap:12px}
+
+  /* Messages */
+  .message{max-width:100%}
+  .bubble{font-size:15px;padding:12px 14px;max-width:85vw}
+  .message.user .bubble{font-size:14px}
+  .avatar{width:24px;height:24px;font-size:8px;flex-shrink:0}
+  .message-meta{font-size:7px}
+  .source-badge{font-size:7px;padding:2px 5px}
+
+  /* Suggestions */
+  .suggestions{padding:0 14px 10px;gap:5px}
+  .suggestion{font-size:9px;padding:5px 9px}
+
+  /* Input area */
+  .input-area{padding:10px 14px;gap:8px}
+  textarea{font-size:15px;padding:9px 12px;min-height:40px}
+  .send-btn{padding:9px 16px;font-size:10px;height:40px}
+
+  /* Welcome */
+  .welcome{padding:32px 16px}
+  .welcome h2{font-size:22px}
+  .welcome p{font-size:15px}
+  .welcome-quote{font-size:14px}
+
+  /* Typing */
+  .typing-bubble{padding:12px 14px}
 }
 </style>
 </head>
