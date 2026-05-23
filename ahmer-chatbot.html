@@ -88,11 +88,13 @@ textarea::placeholder{color:var(--faded);font-style:italic}
 </div>
 <div class="suggestions" id="suggestions">
   <button class="suggestion" onclick="askSuggestion(this)">Who is Ahmer?</button>
-  <button class="suggestion" onclick="askSuggestion(this)">What is Road Ashram?</button>
-  <button class="suggestion" onclick="askSuggestion(this)">Why might he be prosecuted?</button>
-  <button class="suggestion" onclick="askSuggestion(this)">India's biggest problems</button>
-  <button class="suggestion" onclick="askSuggestion(this)">What is Vibes Network?</button>
+  <button class="suggestion" onclick="askSuggestion(this)">What drives him?</button>
+  <button class="suggestion" onclick="askSuggestion(this)">His most impactful work</button>
+  <button class="suggestion" onclick="askSuggestion(this)">What does he believe?</button>
+  <button class="suggestion" onclick="askSuggestion(this)">His view on India today</button>
   <button class="suggestion" onclick="askSuggestion(this)">Advice for young people</button>
+  <button class="suggestion" onclick="askSuggestion(this)">What is Vibes Network?</button>
+  <button class="suggestion" onclick="askSuggestion(this)">Road Ashram</button>
 </div>
 <div class="input-area">
   <textarea id="userInput" placeholder="Ask anything about Ahmer, his work, his views…" rows="1"></textarea>
@@ -100,6 +102,50 @@ textarea::placeholder{color:var(--faded);font-style:italic}
 </div>
 <script>
 const FAQ=[
+  {keys:['what drives him','what motivates','why does he do','what is his motivation','driving force'],answer:`Three things shaped everything Ahmer does.
+
+The Bhuj earthquake in 2001 — he went there as a filmmaker and couldn't return to commercial work after seeing the scale of human suffering. The suffering made the glitz feel irrelevant.
+
+Gujaratn 2002 — he was there during the riots, was attacked by a mob and beaten by the police. It didn't break him. It made him fearless and permanently intolerant of looking away from things that are wrong.
+
+And a quiet, lifelong conviction: that a life spent purely in self-interest isn't a life well lived. "Zaruraton ko rakho kam, to awaaz mein rahega dum" — keep your needs small, and your voice will stay strong.
+
+Those three things are the engine behind everything — the nonprofit work, the campaigns, the Road Ashram, the Bharat ventures, all of it.`},
+  {keys:['most impactful work','biggest impact','most important work','greatest achievement','proudest'],answer:`Ahmer points to several things he's genuinely proud of — not because they were his, but because they moved something real.
+
+The Right to Education Act: he ran the Awaaz Do campaign at UNICEF that helped build the public momentum behind the RTE Act — legislation that changed the lives of millions of children in India.
+
+Frame Her Right: a campaign that mobilised 75,000+ citizens to challenge how Bollywood portrays domestic violence, generating national media coverage and genuine public debate.
+
+The DRTV advertisement at Save the Children: it holds the global record for the highest number of donors brought in from a single television advertisement.
+
+Fairtales Fundraising: built to 300 people across 12 cities, bringing over 1,00,000 new donors to nonprofits across India.
+
+Road Ashram: drove 25,000 kilometres across India during Covid — 30 states, 54 days — raising funds and documenting a country that was hurting.
+
+He would say none of these were his alone. They were always collective. That's the point.`},
+  {keys:['what does he believe','beliefs','values','what he stands for','philosophy','worldview'],answer:`A few things Ahmer holds firmly:
+
+That a principled life matters more than a profitable one — but you need to survive, so keep your needs small.
+
+That organised religion causes more harm than good. He arrived at atheism through honest reading of every major religion and philosophy. He won't preach. He'll just point you toward the books.
+
+That India's poor and young are being failed — by policy, by institutions, and by a mainstream media that looks away. The demographic dividend has been squandered.
+
+That caste is a living, daily injustice — not a historical one. He witnessed it first-hand in UP in 2021-22 and stands in full solidarity with Dalits and the downtrodden.
+
+That change is inevitable. That the people of India are fundamentally kind and open. That hope is not naive — it is a practical necessity.
+
+And that the backroom is enough. You don't need the microphone to move things.`},
+  {keys:['view on india','india today','india currently','state of india','india 2024','india 2025','india 2026'],answer:`Ahmer's honest view on India today:
+
+The country is being degraded — but not destroyed. The demographic dividend has been squandered. Joblessness, discrimination, and a shrinking space for dissent are real and worsening.
+
+AI is the next crisis: the IT and BPO sector gave the first generation of English-speaking Indians a way to break caste and class ceilings. AI will take those jobs. India has no answer for that yet.
+
+What needs to change: devolve power and fiscal resources to states, reform the judiciary, clean up elections, and build for self-sufficiency rather than copying Western models. Gram swaraj — Gandhi's idea of village self-reliance — is more relevant now than ever.
+
+But he hasn't lost hope. "I have not lost hope in the people." India is largely kind and open. The people are the argument for optimism, even when the institutions are the argument against it.`},
   {keys:['who is ahmer','who are you','about ahmer','introduce','tell me about ahmer'],answer:`Ahmer Siddiqui is a Delhi-based activist, serial entrepreneur, filmmaker, writer, and polymath. He started working at 15 in a Bombay darkroom, dropped out after 10th standard, and built a career across film, nonprofit communications, fundraising, and commercial ventures — entirely self-taught.\n\nHe pioneered SMS, internet, and DRTV fundraising in India. He worked at Greenpeace, UNICEF, and Save the Children. He co-founded Third Sector Communications and Fairtales Fundraising (300 people, 12 cities, 1 lakh+ donors). During Covid he drove 25,000 km across India in 54 days for Road Ashram. He now runs Thinquilab and the Vibes Network.\n\nHe is an atheist, non-conformist, and label-averse. His philosophy in one line: "Zaruraton ko rakho kam, to awaaz mein rahega dum" — keep your needs small, and your voice will stay strong.`},
   {keys:['road ashram','covid drive','25000','pandemic drive'],answer:`Road Ashram was a campaign Ahmer ran during Covid. In October–November 2020, he and two colleagues drove 25,000 kilometres across 30 states and union territories in 54 days.\n\nTraditional approaches to Covid relief weren't working. The human crisis was real. They had the time. So they got in a car and went.\n\nFunds raised were donated to Give India for food relief. Stories and ground realities were documented and shared. In Ahmer's words: "It was one of the more useful things I've done."`},
   {keys:['prosecut','arrest','legal','advisory','opposition','punish','in trouble','why is he'],answer:`Ahmer has been advising opposition parties on strategy, communications, and campaign organising. This was entirely voluntary — he has not been paid. He may face prosecution as a result.\n\nHis position: he is an upstanding, proud citizen trying to make the world a better place. He won't share specifics while legal matters are ongoing.\n\n"Ahmer is being punished for being Ahmer."\n\nHe doesn't want to be made a hero. His message: direct your anger to action. Talk outside your circles. Understand the system. Take action. Be a voice, not a victim. We need a million Ahmers.`},
@@ -250,7 +296,7 @@ async function sendMessage(){
   const input=document.getElementById('userInput');
   const text=input.value.trim();
   if(!text||isLoading)return;
-  document.getElementById('suggestions').style.display='none';
+  // suggestions stay visible
   input.value='';input.style.height='auto';
   isLoading=true;document.getElementById('sendBtn').disabled=true;
   addMsg('user',text);
