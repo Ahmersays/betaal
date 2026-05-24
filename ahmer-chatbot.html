@@ -49,6 +49,7 @@ textarea::placeholder{color:#aaa;font-style:italic}
 .send-btn{background:var(--ink);color:#fff;border:none;width:42px;height:42px;cursor:pointer;border-radius:50%;transition:background 0.15s;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:16px;padding:0}
 .send-btn:hover{background:var(--rust)}
 .send-btn:disabled{background:var(--line);cursor:not-allowed}
+
 .welcome{text-align:center;padding:40px 24px;max-width:400px;margin:auto}
 .welcome h2{font-family:"Playfair Display",serif;font-size:24px;font-weight:700;margin-bottom:10px;letter-spacing:-0.01em}
 .welcome h2 em{font-style:italic;color:var(--rust)}
@@ -70,21 +71,17 @@ textarea::placeholder{color:#aaa;font-style:italic}
 <header>
   <div class="header-left">
     <h1>Ahmer <em>Siddiqui</em></h1>
-    <div class="header-sub">Activist · Entrepreneur · Polymath</div>
+    <div class="header-sub">Atheist · Polymath · Activist · Builder · Hellraiser</div>
   </div>
   <div class="header-right">
-    <span class="status-dot"></span>AI Proxy
+    <span class="status-dot"></span>Speaks for Ahmer
   </div>
 </header>
 <div class="chat-container" id="chatContainer">
   <div class="welcome" id="welcome">
     <h2>Ask <em>Ahmer</em></h2>
-    <p>Filmmaker. Activist. Entrepreneur. Polymath.</p>
-    <p>This AI speaks on his behalf.</p>
-    <div class="welcome-quote">
-      "Hum dekhenge — lazim hai ke hum bhi dekhenge."<br>
-      <span style="font-size:12px;color:var(--faded);font-style:normal;">We shall witness. — Faiz</span>
-    </div>
+    <p>Atheist. Builder. Bothered citizen.</p>
+    <p style="font-size:13px;color:var(--faded);margin-top:16px;font-family:'DM Mono',monospace;letter-spacing:0.06em;text-transform:uppercase;">AI enabled AMA, ask away</p>
   </div>
 </div>
 <div class="suggestions" id="suggestions">
@@ -234,6 +231,7 @@ document.getElementById('userInput').addEventListener('input', function() {
 document.getElementById('userInput').addEventListener('keydown', function(e) {
   if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
 });
+
 </script>
 </body>
 </html>
