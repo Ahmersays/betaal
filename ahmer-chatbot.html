@@ -183,12 +183,29 @@ async function sendMessage() {
   aiCallLog.push(Date.now());
 
   try {
-    const res = await fetch(WORKER_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ messages: conversationHistory.slice(-6) })
-    });
-    const data = await res.json();
+    async function callWorker(attempt = 1) {
+      const res = await fetch(WORKER_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: conversationHistory.slice(-6) })
+      });
+      const data = await res.json();
+
+      // If rate limited, wait 18 seconds and retry once
+      if (data.type === 'rate_limited' && attempt === 1) {
+        removeTyping();
+        addMsg('assistant', 'Getting many questions right now — retrying in 18 seconds…', null);
+        await new Promise(r => setTimeout(r, 18000));
+        // Remove the retry message
+        const msgs = document.querySelectorAll('.message.ahmer');
+        if (msgs.length) msgs[msgs.length-1].remove();
+        showTyping();
+        return callWorker(2);
+      }
+      return data;
+    }
+
+    const data = await callWorker();
     const reply = data.content?.[0]?.text || "I am having trouble responding. Please try again.";
     const source = data.type === 'faq' ? 'static' : 'ai';
     removeTyping();
